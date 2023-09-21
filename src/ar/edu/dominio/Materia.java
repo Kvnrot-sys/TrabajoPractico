@@ -1,13 +1,15 @@
 package ar.edu.dominio;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class Materia {
 	private String nombre;
 	private Integer id;
-	private List<Materia> correlativas;
-	
+	private ArrayList<Materia> correlativas = new ArrayList<Materia>();
+	private Nota notas;
 	
 	
 	public Materia(String nombre, Integer id) {
@@ -28,13 +30,10 @@ public class Materia {
 	}
 	
 	
-	
-
-	
-	public List<Materia> getCorrelativas() {
+	public ArrayList<Materia> getCorrelativas() {
 		return correlativas;
 	}
-	public void setCorrelativas(List<Materia> correlativas) {
+	public void setCorrelativas(ArrayList<Materia> correlativas) {
 		this.correlativas = correlativas;
 	}
 	public void añadirCorrelativa(Materia materia) {
@@ -43,7 +42,51 @@ public class Materia {
 	
 	
 	
+
 	
+	
+	
+	
+	
+	
+	public Nota getNotas() {
+		return notas;
+	}
+	public void setNotas(Nota notas) {
+		this.notas = notas;
+	}
+	
+	
+	
+	
+	
+	
+	@Override
+	public boolean equals(Object otro) {
+		
+		if(this == otro) {
+			return true;
+		}
+		
+		if(otro == null) {
+			return false;
+		}
+		
+		if(otro.getClass() != Aula.class) {
+			return false;
+		}
+		
+		Materia materia = (Materia) otro;
+		
+		if(materia.getId().equals(this.id) && materia.getNombre().equals(this.nombre) 
+				&& materia.getCorrelativas().equals(this.correlativas)) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	
+	}
 	
 	
 	

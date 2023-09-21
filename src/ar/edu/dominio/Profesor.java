@@ -51,6 +51,35 @@ public class Profesor {
 	} 
 	
 	
+	@Override
+	public boolean equals(Object otro) {
+		
+		if(this == otro) {
+			return true;
+		}
+		
+		if(otro == null) {
+			return false;
+		}
+		
+		if(otro.getClass() != Aula.class) {
+			return false;
+		}
+		
+		Profesor profesor = (Profesor) otro;
+		
+		if(profesor.getId().equals(this.id) && profesor.getApellido().equals(this.apellido)  
+				&& profesor.getDni().equals(this.dni) && profesor.getFechaNacimiento().equals(this.fechaNacimiento) 
+				&& profesor.getNombre().equals(this.nombre)) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	
+	}
+	
+	
 	
 
 }

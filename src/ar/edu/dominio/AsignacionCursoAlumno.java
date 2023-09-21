@@ -63,6 +63,40 @@ public class AsignacionCursoAlumno {
 	public void setNota(Nota nota) {
 		this.nota = nota;
 	}
+
+
+
+	@Override
+	public boolean equals(Object otro) {
+		
+		
+		if (this == otro) {
+			return true;
+		}
+		
+		if(otro== null) {
+			return false;
+		}
+		
+		
+		if(otro.getClass() != AsignacionCursoAlumno.class) {
+			return false;
+		}
+		
+		AsignacionCursoAlumno asignacion = (AsignacionCursoAlumno) otro;
+		
+		if(asignacion.getAlumnos().equals(this.alumnos) && asignacion.getComision().equals(this.comision) 
+				&& asignacion.getId().equals(this.id) && asignacion.getNota().equals(this.nota)) {
+			return true;
+		} else {
+			return false;
+		}
+		
+		
+		
+		
+		
+	}
 	
 	
 	

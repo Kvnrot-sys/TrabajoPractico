@@ -5,15 +5,17 @@ import java.util.Date;
 public class CicloLectivo {
 //	CicloLectivo . Id, fechaInicioCicloLectivo, fechaFinalizacionCicloLectivo, fechaInicioInscripcion,
 //	fechaFinalizacionInscripcion
-	private Integer id;
+	
+	Integer generador = 1;
+	private static Integer id = 0;
 	private Date fechaInicioCicloLectivo;
 	private Date fechaFinalizacionCicloLectivo;
 	private Date fechaInicioInscripcion;
 	private Date fechaFinalizacionInscripcion;
 	
-	public CicloLectivo(Integer id, Date fechaInicioCicloLectivo, Date fechaFinalizacionCicloLectivo,
+	public CicloLectivo(Date fechaInicioCicloLectivo, Date fechaFinalizacionCicloLectivo,
 			Date fechaInicioInscripcion, Date fechaFinalizacionInscripcion) {
-		this.id = id;
+		id+=generador;
 		this.fechaInicioCicloLectivo = fechaInicioCicloLectivo;
 		this.fechaFinalizacionCicloLectivo = fechaFinalizacionCicloLectivo;
 		this.fechaInicioInscripcion = fechaInicioInscripcion;
@@ -51,6 +53,34 @@ public class CicloLectivo {
 	}
 	
 	
+	@Override
+	public boolean equals(Object otro) {
+		
+		if(this == otro) {
+			return true;
+		}
+		
+		if(otro == null) {
+			return false;
+		}
+		
+		if(otro.getClass() != CicloLectivo.class) {
+			return false;
+		}
+		
+		CicloLectivo ciclo = (CicloLectivo) otro;
+		
+		if(ciclo.getFechaFinalizacionCicloLectivo().equals(this.fechaFinalizacionCicloLectivo) 
+				&& ciclo.getFechaFinalizacionInscripcion().equals(this.fechaFinalizacionInscripcion) 
+				&& ciclo.getFechaInicioCicloLectivo().equals(this.fechaInicioCicloLectivo) 
+				&& ciclo.getFechaInicioInscripcion().equals(this.getFechaInicioInscripcion())) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	
+	}
 	
 	
 	
