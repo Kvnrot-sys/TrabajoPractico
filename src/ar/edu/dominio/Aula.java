@@ -2,72 +2,49 @@ package ar.edu.dominio;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 public class Aula {
 //	Aula id, Cantidad De Alumnos
-
-	private Integer id;
+	Integer generador = 1;
+	private Integer id = 0;
 	private Integer cantidad;
-	
-	
-	public Aula(Integer id, Integer alumnos) {
-		super();
-		this.id = id;
-		this.cantidad = alumnos;
+
+	public Aula() {
+		id += generador;
 	}
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
-	
-	
-	
-	
-	public Integer getAlumnos() {
+
+	public Integer getCantidad() {
 		return cantidad;
 	}
-	public void setAlumnos(Integer alumnos) {
-		this.cantidad = alumnos;
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
 	}
-	
-	
-	
+
 	@Override
-	public boolean equals(Object otro) {
-		
-		if(this == otro) {
-			return true;
-		}
-		
-		if(otro == null) {
-			return false;
-		}
-		
-		if(otro.getClass() != Aula.class) {
-			return false;
-		}
-		
-		Aula aula = (Aula) otro;
-		
-		if(aula.getId().equals(this.id)) {
-			return true;
-		}else {
-			return false;
-		}
-		
-	
+	public int hashCode() {
+		return Objects.hash(id);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Aula)) {
+			return false;
+		}
+		Aula other = (Aula) obj;
+		return Objects.equals(id, other.id);
+	}
 
 }

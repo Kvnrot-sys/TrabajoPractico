@@ -2,6 +2,7 @@ package ar.edu.dominio;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
 public class Alumno {
 
@@ -72,33 +73,24 @@ public class Alumno {
 	}
 
 	@Override
-	public boolean equals(Object otro) {
-		// TODO Auto-generated method stub
-
-		if (this == otro) {
-			return true;
-		}
-		if (otro == null) {
-			return false;
-		}
-
-		if (otro.getClass() != Alumno.class) {
-			return false;
-		}
-
-		Alumno alumno = (Alumno) otro;
-
-		if (alumno.getApellido().equals(this.apellido) && alumno.getNombre().equals(this.nombre)
-				&& alumno.getId().equals(this.id) && alumno.getFechaIngreso().equals(this.fechaIngreso)
-				&& alumno.getFechaDeNacimiento().equals(this.fechaDeNacimiento) 
-				&& alumno.getDni().equals(this.dni)) {
-			return true;
-		} else {
-			return false;
-		}
-
+	public int hashCode() {
+		return Objects.hash(dni,id);
 	}
 
-}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Alumno)) {
+			return false;
+		}
+		Alumno other = (Alumno) obj;
+		return Objects.equals(apellido, other.apellido) && Objects.equals(dni, other.dni)
+				&& Objects.equals(fechaDeNacimiento, other.fechaDeNacimiento)
+				&& Objects.equals(fechaIngreso, other.fechaIngreso) && Objects.equals(id, other.id)
+				&& Objects.equals(nombre, other.nombre);
+	}
 
-//	Alumnos Id, nombre , Apellido , Fecha Nacimiento, fechaIngreso
+	
+}

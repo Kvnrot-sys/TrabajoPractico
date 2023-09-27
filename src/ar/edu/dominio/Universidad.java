@@ -1,5 +1,8 @@
 package ar.edu.dominio;
 
+import java.util.Calendar;
+import java.util.HashSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -8,107 +11,105 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Universidad {
-	private List<Alumno> alumnos = new ArrayList<Alumno>();
-	private List<Materia> materias = new ArrayList<Materia>();
-	private List<Comision> comisiones = new ArrayList<Comision>();
-	private List<Profesor> profesor = new ArrayList<Profesor>();
-	
-	
-	
-	private List<CicloLectivo> ciclos = new ArrayList<CicloLectivo>(1);
-	
-	
-	private Collection<AsignacionCursoAlumno> cursoAlumno;
-	private Collection<AsignacionCursoProfe> cursoProfe;
-	
+	private Set<Alumno> alumnos = new HashSet<Alumno>();
+	private Set<Materia> materias = new HashSet<Materia>();
+	private Set<Comision> comisiones = new HashSet<Comision>();
+	private Set<Profesor> profesor = new HashSet<Profesor>();
+
+	private Set<CicloLectivo> ciclos = new HashSet<CicloLectivo>(1);
+
+	private Set<AsignacionCursoAlumno> cursoAlumno = new HashSet<AsignacionCursoAlumno>();
+	private Set<AsignacionCursoProfe> cursoProfe = new HashSet<AsignacionCursoProfe>();
+
+	private HashMap<List<AsignacionCursoAlumno>, List<AsignacionCursoProfe>> asignaciones = new HashMap<List<AsignacionCursoAlumno>, List<AsignacionCursoProfe>>();
 
 	public boolean agregarMaterias(Materia materia) {
 		boolean agregado = false;
-		
-		
-		if (this.materias.contains(materia.getId())  ) {
+
+		if (this.materias.contains(materia)) {
 			agregado = false;
 		} else {
 			this.materias.add(materia);
 			agregado = true;
 
 		}
-		
+
 		return agregado;
-		
-		
+
 	}
 
 	public boolean agregarAlumno(Alumno alumno) {
-		boolean agregado = false;		
-		
-		
-		if (this.alumnos.contains(alumno.getDni())) {
+		boolean agregado = false;
+
+		if (this.alumnos.contains(alumno)) {
 			agregado = false;
 		} else {
-			this.alumnos.add(alumno);
 			agregado = true;
 		}
 		return agregado;
 	}
 
 	public boolean agregarCicloLectivo(CicloLectivo ciclo) {
+		boolean cicloIngresado = false;
 
-		boolean agregado = false;
 		Date max = null;
 		Date min = null;
 
 		// AÑADIR LOS CICLOS A LA LISTA
 
-		if (ciclo.getId() == 1) {
+		if (this.ciclos.contains(ciclo)) {
+			cicloIngresado = false;
+		} else {
 			this.ciclos.add(ciclo);
-			max = ciclo.getFechaFinalizacionCicloLectivo();
-			min = ciclo.getFechaInicioInscripcion();
+			cicloIngresado = true;
 		}
 
 		for (CicloLectivo iterador : this.ciclos) {
-			
-			
-			
-			
+			if (iterador.getId().equals(1)) {
+				max = ciclo.getFechaFinalizacionCicloLectivo();
+				min = ciclo.getFechaInicioInscripcion();
+			}
+
+		}
+
+		for (CicloLectivo iterador : this.ciclos) {
+
 			if (iterador == null) {
 				if (ciclo.getFechaInicioCicloLectivo().after(min) && ciclo.getFechaInicioCicloLectivo().after(max)
 						&& ciclo.getFechaFinalizacionCicloLectivo().after(ciclo.getFechaInicioInscripcion())) {
 					this.ciclos.add(ciclo);
-					agregado = true;
+					cicloIngresado = true;
 				}
 
 			}
 		}
 
-		return agregado;
+		return cicloIngresado;
 
 	}
 
 	public boolean agregarComision(Comision comision) {
-		
-		
 
 		boolean agregada = false;
-		if (this.comisiones.contains(comision.getMateria()) && this.comisiones.contains(comision.getCicloLectivo())
-				&& this.comisiones.contains(comision.getTurno())) {
-			agregada = false;
-		} else {
-			this.comisiones.add(comision);
-			agregada = true;
+		comisiones.add(comision);
+		
+		if(!this.comisiones.isEmpty()) {
+			 agregada = true;
 		}
+		
+		
 		return agregada;
-
 	}
 
 	public boolean agregarDocente(Profesor profesor) {
 
 		boolean agregado = false;
-		
-		
-		if (this.profesor.contains(profesor.getDni())) {
+
+		if (this.profesor.contains(profesor)) {
 			agregado = false;
 		} else {
 			this.profesor.add(profesor);
@@ -128,9 +129,6 @@ public class Universidad {
 
 		Profesor profesorAInscribir = null;
 		Comision comisionAInscribir = null;
-		
-		
-		
 
 		for (Profesor iterador : this.profesor) {
 			if (iterador.getDni().equals(dniDocente)) {
@@ -146,21 +144,20 @@ public class Universidad {
 				comisionEsta = true;
 			}
 		}
-		
-		//
 
+		//
 
 		if (profeEsta == true && comisionEsta == true) {
 			Integer dni = profesorAInscribir.getDni();
 			Integer id = comisionAInscribir.getId();
-			
-			if(this.cursoProfe.stream().anyMatch(elementos->elementos.getProfesor().getDni().equals(dni))  
-					&& this.cursoProfe.stream().anyMatch(elemento->elemento.getId().equals(id))){
+
+			if (this.cursoProfe.stream().anyMatch(elementos -> elementos.getProfesor().getDni().equals(dni))
+					&& this.cursoProfe.stream().anyMatch(elemento -> elemento.getId().equals(id))) {
 				inscripto = false;
-				
-			}
-			else {
+
+			} else {
 				AsignacionCursoProfe asignacion = new AsignacionCursoProfe(profesorAInscribir, comisionAInscribir);
+				this.cursoProfe.add(asignacion);
 				inscripto = true;
 			}
 
@@ -169,20 +166,37 @@ public class Universidad {
 		return inscripto;
 	}
 
-	public boolean asignarMateriaCorrelativa(String nombre, Integer id) {
+	public boolean asignarMateriaCorrelativa(Integer idMateria, Integer idCorrelativa) {
 
 		boolean asignado = false;
-		Materia correlativa = new Materia(nombre, id);
 
-		for (Materia iterador : this.materias) {
-			if (iterador.getId().equals(correlativa.getId())) {
-				iterador.añadirCorrelativa(correlativa);
-				asignado = true;
+		boolean encontrado = false;
+		boolean encontrado2 = false;
+
+		Materia materiaInicial = null;
+		Materia materiaCorrelativa = null;
+
+		for (Materia materia : this.materias) {
+			if (materia.getId().equals(idMateria)) {
+				materiaInicial = materia;
+				encontrado = true;
 			}
+		}
 
+		for (Materia materia2 : this.materias) {
+			if (materia2.getId().equals(idCorrelativa)) {
+				materiaCorrelativa = materia2;
+				encontrado2 = true;
+			}
+		}
+
+		if (encontrado == true && encontrado2 == true) {
+			materiaInicial.añadirCorrelativa(materiaCorrelativa);
+			asignado = true;
 		}
 
 		return asignado;
+
 	}
 
 	public boolean eliminarCorrelativa(Integer idMateria, Integer idCorrelativaAEliminar) {
@@ -200,7 +214,46 @@ public class Universidad {
 
 	}
 
+	public boolean asignarAlumnoAComision(Integer dni, Integer idComision) {
+		boolean asignado = false;
+		boolean alumnoExiste = false;
+		boolean cursoExiste = false;
+		Alumno alumnoAInscribir = null;
+		Comision comisionAInscribir = null;
+
+		for (Alumno iterador : this.alumnos) {
+			if (iterador.getDni().equals(dni)) {
+				alumnoAInscribir = iterador;
+				alumnoExiste = true;
+			}
+
+		}
+
+		for (Comision iterador : this.comisiones) {
+			if (iterador.getId().equals(idComision)) {
+				comisionAInscribir = iterador;
+				cursoExiste = true;
+			}
+		}
+
+		if (alumnoExiste == true && cursoExiste == true) {
+			AsignacionCursoAlumno asignacion = new AsignacionCursoAlumno(alumnoAInscribir, comisionAInscribir);
+			if (this.cursoAlumno.contains(asignacion)) {
+				asignado = false;
+			} else {
+				this.cursoAlumno.add(asignacion);
+				asignado = true;
+			}
+
+		}
+
+		return asignado;
+
+	}
+
 	public boolean inscribirAlumnoAComision(Integer dni, Integer idComision) {
+
+		Date hoy = new Date();
 
 		boolean inscripto = false;
 
@@ -225,25 +278,25 @@ public class Universidad {
 				comisionEsta = true;
 			}
 		}
-		
-		// averiguar la notas de las correlativas del alumno
-		
-		
-		
-		/*
-		 * 
-		 * // Verificar que el alumno y la comisión estén dados de alta
-		   //No se puede inscribir Alumnos si este no tiene aprobadas todas las correlativas. Se aprueba con 4 o más.
-		   //La inscripción no se puede realizar si esta fuera de fecha Inscripción
-		   //No se puede inscribir el alumno si excede la cantidad de alumnos permitidos en el aula
-		   //No se puede inscribir el Alumno si ya está inscripto a otra comisión el mismo día y Turno
-		   //No se puede inscribir a una materia que haya aprobado previamente
-		 */
+
+		List<Materia> correlativas = comisionAInscribir.getMateria().getCorrelativas();
+
+		boolean correlativasAprobadas = false;
+
+		if (correlativas.stream().allMatch(materias -> materias.getNotas().aprobada() == true)) {
+			correlativasAprobadas = true;
+		}
+
+		Date fechaInscripcion = comisionAInscribir.getCicloLectivo().getFechaInicioInscripcion();
+		Date fechaInscripcionF = comisionAInscribir.getCicloLectivo().getFechaFinalizacionInscripcion();
 
 		if (alumnoEsta == true && comisionEsta == true) {
-			AsignacionCursoAlumno asignacion = new AsignacionCursoAlumno(alumnoAInscribir, comisionAInscribir);
-			this.cursoAlumno.add(asignacion);
-			inscripto = true;
+			if (correlativasAprobadas == true && (hoy.after(fechaInscripcion) && hoy.before(fechaInscripcionF))) {
+				AsignacionCursoAlumno asignacion = new AsignacionCursoAlumno(alumnoAInscribir, comisionAInscribir);
+				this.cursoAlumno.add(asignacion);
+				inscripto = true;
+
+			}
 
 		}
 
@@ -255,7 +308,7 @@ public class Universidad {
 		boolean notaAsignada = false;
 
 		for (AsignacionCursoAlumno iterador : cursoAlumno) {
-			if (iterador.getId().equals(idComision) && iterador.getId().equals(idAlumno)) {
+			if (iterador.getComision().getId().equals(idComision) && iterador.getAlumnos().getId().equals(idAlumno)) {
 				iterador.setNota(nota);
 				notaAsignada = true;
 			}
@@ -270,32 +323,34 @@ public class Universidad {
 		Collection<Materia> materiasAprobadas = null;
 
 		for (AsignacionCursoAlumno iterador : this.cursoAlumno) {
-			if (iterador.getAlumnos().getId().equals(idAlumno) && iterador.getNota().aprobada() == true  ) {
-				
-					materiasAprobadas.add(iterador.getComision().getMateria() );
-				}
+			if (iterador.getAlumnos().getId().equals(idAlumno) && iterador.getNota().aprobada() == true) {
+
+				materiasAprobadas.add(iterador.getComision().getMateria());
 			}
-		
+		}
 
 		return materiasAprobadas;
 
 	}
 
-//	
-// public Collection<Materia> obtenerMateriasQueFaltanCursarParaUnAlumno(Integer idAlumno){
-//	 
-//	 	Collection<Materia> materias = null;
-//	  Collection<Materia> materiasPendientes = null;
-//	  
-//	  for (AsignacionCursoAlumno comision : this.cursoAlumno) {
-//		  if(comision.getAlumnos().getId().equals(idAlumno)) {
-//			  materias.add(comision.getComision().getMateria());
-//		  }
-//	}	  
-//	 
-//	 
-//	  }
-//	 
+	public Collection<Materia> obtenerMateriasQueFaltanCursarParaUnAlumno(Integer idAlumno) {
+
+		Collection<Materia> materiasAComparar = null;
+
+		for (AsignacionCursoAlumno comision : this.cursoAlumno) {
+			if (comision.getAlumnos().getId().equals(idAlumno)) {
+				materiasAComparar.add(comision.getComision().getMateria());
+			}
+		}
+
+		materiasAComparar.addAll(this.materias);
+
+		Set<Materia> set = new HashSet<>(materiasAComparar);
+		Collection<Materia> materiasPendientes = new ArrayList<>(set);
+
+		return materiasPendientes;
+
+	}
 
 	public Collection<Nota> ObtenerReporteDeNotasDeAlumnosDeCurso(Integer idCurso) {
 
@@ -321,99 +376,79 @@ public class Universidad {
 
 		for (AsignacionCursoAlumno iterador : this.cursoAlumno) {
 			if (iterador.getAlumnos().getId().equals(idAlumno)) {
-				promedio = iterador.getNota().promedio();
+				promedio += iterador.getNota().promedio();
+				cantidad += 1;
 			}
 
 		}
-		return promedio;
+		return promedio / cantidad;
 
 	}
-	
-	
-	
-	public Nota obtenerNota(Integer idAlumno, Integer idMateria) {
-		Nota nota = null;
-		
-		for(AsignacionCursoAlumno buscar : this.cursoAlumno) {
-			if(buscar.getAlumnos().getId().equals(idAlumno) && buscar.getComision().getMateria().getId().equals(idMateria)){
-				nota = buscar.getNota();
-				
+
+	public double obtenerNota(Integer idAlumno, Integer idMateria) {
+		Double nota = 0.0;
+
+		for (AsignacionCursoAlumno buscar : this.cursoAlumno) {
+			if (buscar.getAlumnos().getId().equals(idAlumno)
+					&& buscar.getComision().getMateria().getId().equals(idMateria)) {
+				nota = buscar.getNota().promedio();
 
 			}
 		}
-		
-		
+
 		return nota;
-		
-		
+
 	}
 
-	public List<Alumno> getAlumnos() {
-		return alumnos;
+	public boolean asignarAulaALaComision(Integer idComision, Aula aula) {
+
+		boolean comisionEsta = false;
+
+		Comision comisionHallada = null;
+
+		for (Comision comision : this.comisiones) {
+			if (comision.getId().equals(idComision)) {
+
+				comisionHallada = comision;
+				comisionHallada.setAula(aula);
+				comisionEsta = true;
+			}
+		}
+
+		return comisionEsta;
+
 	}
 
-	public void setAlumnos(List<Alumno> alumnos) {
-		this.alumnos = alumnos;
-	}
+	public boolean asignarProfeAAula(Integer idAula, Integer dniDocente) {
+		boolean asignado = false;
 
-	public List<Materia> getMaterias() {
-		return materias;
-	}
+		List<AsignacionCursoProfe> profeAAsignar = null;
 
-	public void setMaterias(List<Materia> materias) {
-		this.materias = materias;
-	}
+		List<AsignacionCursoAlumno> alumnosAAsignar = null;
 
-	public List<Comision> getComisiones() {
-		return comisiones;
-	}
+		Integer contador = 0;
 
-	public void setComisiones(List<Comision> comisiones) {
-		this.comisiones = comisiones;
-	}
+		for (AsignacionCursoAlumno iterador : this.cursoAlumno) {
+			if (iterador.getComision().getAula().getId().equals(idAula)) {
+				alumnosAAsignar.add(iterador);
 
-	public List<Profesor> getProfesor() {
-		return profesor;
-	}
+			}
 
-	public void setProfesor(List<Profesor> profesor) {
-		this.profesor = profesor;
-	}
+		}
 
-	public List<CicloLectivo> getCiclos() {
-		return ciclos;
-	}
+		for (AsignacionCursoProfe iterador : this.cursoProfe) {
+			if (iterador.getProfesor().getDni().equals(dniDocente)) {
+				profeAAsignar.add(iterador);
+			}
+		}
 
-	public void setCiclos(List<CicloLectivo> ciclos) {
-		this.ciclos = ciclos;
-	}
+		if (!this.asignaciones.containsKey(alumnosAAsignar) && !this.asignaciones.containsValue(profeAAsignar)) {
+			this.asignaciones.putIfAbsent(alumnosAAsignar, profeAAsignar);
+			asignado = true;
+		}
 
-	public Collection<AsignacionCursoAlumno> getCursoAlumno() {
-		return cursoAlumno;
-	}
+		return asignado;
 
-	public void setCursoAlumno(Collection<AsignacionCursoAlumno> cursoAlumno) {
-		this.cursoAlumno = cursoAlumno;
 	}
-
-	public Collection<AsignacionCursoProfe> getCursoProfe() {
-		return cursoProfe;
-	}
-
-	public void setCursoProfe(Collection<AsignacionCursoProfe> cursoProfe) {
-		this.cursoProfe = cursoProfe;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

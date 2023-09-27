@@ -1,6 +1,7 @@
 package ar.edu.dominio;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class CicloLectivo {
 //	CicloLectivo . Id, fechaInicioCicloLectivo, fechaFinalizacionCicloLectivo, fechaInicioInscripcion,
@@ -51,36 +52,27 @@ public class CicloLectivo {
 	public void setFechaFinalizacionInscripcion(Date fechaFinalizacionInscripcion) {
 		this.fechaFinalizacionInscripcion = fechaFinalizacionInscripcion;
 	}
-	
-	
 	@Override
-	public boolean equals(Object otro) {
-		
-		if(this == otro) {
-			return true;
-		}
-		
-		if(otro == null) {
-			return false;
-		}
-		
-		if(otro.getClass() != CicloLectivo.class) {
-			return false;
-		}
-		
-		CicloLectivo ciclo = (CicloLectivo) otro;
-		
-		if(ciclo.getFechaFinalizacionCicloLectivo().equals(this.fechaFinalizacionCicloLectivo) 
-				&& ciclo.getFechaFinalizacionInscripcion().equals(this.fechaFinalizacionInscripcion) 
-				&& ciclo.getFechaInicioCicloLectivo().equals(this.fechaInicioCicloLectivo) 
-				&& ciclo.getFechaInicioInscripcion().equals(this.getFechaInicioInscripcion())) {
-			return true;
-		}else {
-			return false;
-		}
-		
-	
+	public int hashCode() {
+		return Objects.hash(id);
 	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CicloLectivo)) {
+			return false;
+		}
+		CicloLectivo other = (CicloLectivo) obj;
+		return Objects.equals(fechaFinalizacionCicloLectivo, other.fechaFinalizacionCicloLectivo)
+				&& Objects.equals(fechaFinalizacionInscripcion, other.fechaFinalizacionInscripcion)
+				&& Objects.equals(fechaInicioCicloLectivo, other.fechaInicioCicloLectivo)
+				&& Objects.equals(fechaInicioInscripcion, other.fechaInicioInscripcion);
+	}
+	
+	
+	
 	
 	
 	

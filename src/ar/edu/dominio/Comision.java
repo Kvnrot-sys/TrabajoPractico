@@ -1,5 +1,8 @@
 package ar.edu.dominio;
 
+import java.util.Objects;
+import java.util.Set;
+
 public class Comision {
 //	Comisión id , Materia, y cicloLectivo, Turno
 
@@ -16,7 +19,6 @@ public class Comision {
 		this.materia = materia;
 		this.cicloLectivo = cicloLectivo;
 		this.turno = turno;
-		this.nota = nota;
 	}
 
 	public Integer getId() {
@@ -66,37 +68,24 @@ public class Comision {
 	public void setAula(Aula aula) {
 		this.aula = aula;
 	}
-	
-	
+
 	@Override
-	public boolean equals(Object otro) {
-		
-		if(this == otro) {
-			return true;
-		}
-		
-		if(otro == null) {
-			return false;
-		}
-		
-		if(otro.getClass() != Aula.class) {
-			return false;
-		}
-		
-		Comision comision = (Comision) otro;
-		
-		if( comision.getAula().equals(this.aula) && comision.getCicloLectivo().equals(this.cicloLectivo) 
-				&& comision.getId().equals(this.id)  && comision.getMateria().equals(this.materia) 
-				&& comision.getNota().equals(this.nota)  && comision.getTurno().equals(this.turno) ) {
-			return true;
-		}else {
-			return false;
-		}
-		
-	
+	public int hashCode() {
+		return Objects.hash();
 	}
-	
-	
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Comision other = (Comision) obj;
+		return Objects.equals(aula, other.aula) && Objects.equals(cicloLectivo, other.cicloLectivo)
+				&& Objects.equals(id, other.id) && Objects.equals(materia, other.materia)
+				&& Objects.equals(nota, other.nota) && Objects.equals(turno, other.turno);
+	}
 
 }

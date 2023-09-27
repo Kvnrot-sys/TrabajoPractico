@@ -1,6 +1,7 @@
 package ar.edu.dominio;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Profesor {
 //	Alumnos Id, nombre , Apellido , Fecha Nacimiento
@@ -48,38 +49,34 @@ public class Profesor {
 	}
 	public void setDni(Integer dni) {
 		this.dni = dni;
-	} 
-	
-	
+	}
 	@Override
-	public boolean equals(Object otro) {
-		
-		if(this == otro) {
+	public int hashCode() {
+		return Objects.hash(dni);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		}
-		
-		if(otro == null) {
+		if (obj == null)
 			return false;
-		}
-		
-		if(otro.getClass() != Aula.class) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		
-		Profesor profesor = (Profesor) otro;
-		
-		if(profesor.getId().equals(this.id) && profesor.getApellido().equals(this.apellido)  
-				&& profesor.getDni().equals(this.dni) && profesor.getFechaNacimiento().equals(this.fechaNacimiento) 
-				&& profesor.getNombre().equals(this.nombre)) {
-			return true;
-		}else {
-			return false;
-		}
-		
+		Profesor other = (Profesor) obj;
+		return Objects.equals(dni, other.dni);
+	}
+	
+	
+	
+	
+	
 	
 	}
 	
 	
 	
+	
+	
+	
+	
 
-}
